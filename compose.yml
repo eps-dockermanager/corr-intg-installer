@@ -1,0 +1,108 @@
+name: CorrSuiteIntegration
+services:
+  corr-intg-db:
+    image: ghcr.io/eps-dockermanager/corr-intg-db:${ENV_IMAGE_VER}
+    container_name: corr-intg-db
+    volumes:
+      - ./data/corr-intg-db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ctiintg
+      POSTGRES_USER: ctiintgdbuser
+      POSTGRES_PASSWORD: ctiintgdbpwd
+    ports:
+      - '5435:5432'
+    networks:
+      - corr-intg
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1024MB'
+  corr-intg-dbmgr:
+    image: ghcr.io/eps-dockermanager/corr-intg-dbmgr:${ENV_IMAGE_VER}
+    container_name: corr-intg-dbmgr
+    depends_on:
+      corr-intg-db:
+        condition: service_healthy
+    environment:
+    - LIQUIBASE_COMMAND_URL=jdbc:postgresql://corr-intg-db:5432/ctiintg
+    - LIQUIBASE_COMMAND_CHANGELOG_FILE=/changelog.xml
+    - LIQUIBASE_COMMAND_USERNAME=ctiintgdbuser
+    - LIQUIBASE_COMMAND_PASSWORD=ctiintgdbpwd
+    command: liquibase update
+    networks:
+      - corr-intg
+  corr-intg-api:
+    image: ghcr.io/eps-dockermanager/corr-intg-api:${ENV_IMAGE_VER}
+    container_name: corr-intg-api
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5040/api/test/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    environment:
+      HTTP_PORTS: 5040
+    ports:
+      - '5040:5040'
+    volumes:
+      - ./data/api:/App/data
+    networks:
+      - corr-intg
+  corr-intg-datascanner:
+    image: ghcr.io/eps-dockermanager/corr-intg-datascanner:${ENV_IMAGE_VER}
+    container_name: corr-intg-datascanner
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5041/api/test/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    environment:
+      HTTP_PORTS: 5041
+    ports:
+      - '5041:5041'
+    volumes:
+      - ./data/datascanner:/App/data
+    networks:
+      - corr-intg
+  corr-intg-prometheus:
+    image: ghcr.io/eps-dockermanager/corr-intg-prometheus:${ENV_IMAGE_VER}
+    container_name: corr-intg-prometheus
+    ports:
+      - "9091:9090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    volumes:
+      - ./data/prometheus_data:/prometheus
+    networks:
+      - corr-intg
+  corr-intg-grafana:
+    image: ghcr.io/eps-dockermanager/corr-intg-grafana:${ENV_IMAGE_VER}
+    container_name: corr-intg-grafana
+    ports:
+      - "3001:3000"
+    restart: unless-stopped
+    depends_on:
+     - corr-intg-prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./data/grafana_data:/var/lib/grafana
+    networks:
+      - corr-intg
+networks:
+  corr-intg: {}
+volumes:
+  data:
+    driver: local
