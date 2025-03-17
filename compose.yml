@@ -1,5 +1,14 @@
 name: CorrSuiteIntegration
 services:
+  corr-intg-web:
+    image: ghcr.io/eps-dockermanager/corr-intg-web:${ENV_IMAGE_VER}
+    container_name: corr-intg-web
+    ports:
+      - 8083:8083
+    networks:
+      - corr-intg
+    volumes:
+      - ./data/nginx/cert:/cert
   corr-intg-db:
     image: ghcr.io/eps-dockermanager/corr-intg-db:${ENV_IMAGE_VER}
     container_name: corr-intg-db
@@ -69,6 +78,21 @@ services:
       - '5041:5041'
     volumes:
       - ./data/datascanner:/App/data
+    networks:
+      - corr-intg
+  corr-intg-appconfig:
+    image: ghcr.io/eps-dockermanager/corr-intg-appconfig:${ENV_IMAGE_VER}
+    container_name: corr-intg-appconfig
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5044/api/test/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    environment:
+      HTTP_PORTS: 5044
+    ports:
+      - '5044:5044'
     networks:
       - corr-intg
   corr-intg-prometheus:
