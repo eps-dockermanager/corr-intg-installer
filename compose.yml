@@ -15,9 +15,9 @@ services:
     volumes:
       - ./data/corr-intg-db_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: ctiintg
-      POSTGRES_USER: ctiintgdbuser
-      POSTGRES_PASSWORD: ctiintgdbpwd
+      POSTGRES_DB: corrintg
+      POSTGRES_USER: corrintgdbuser
+      POSTGRES_PASSWORD: corrintgdbpwd
     ports:
       - '5435:5432'
     networks:
@@ -39,10 +39,10 @@ services:
       corr-intg-db:
         condition: service_healthy
     environment:
-    - LIQUIBASE_COMMAND_URL=jdbc:postgresql://corr-intg-db:5432/ctiintg
+    - LIQUIBASE_COMMAND_URL=jdbc:postgresql://corr-intg-db:5432/corrintg
     - LIQUIBASE_COMMAND_CHANGELOG_FILE=/changelog.xml
-    - LIQUIBASE_COMMAND_USERNAME=ctiintgdbuser
-    - LIQUIBASE_COMMAND_PASSWORD=ctiintgdbpwd
+    - LIQUIBASE_COMMAND_USERNAME=corrintgdbuser
+    - LIQUIBASE_COMMAND_PASSWORD=corrintgdbpwd
     command: liquibase update
     networks:
       - corr-intg
