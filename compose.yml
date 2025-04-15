@@ -4,7 +4,7 @@ services:
     image: ghcr.io/eps-dockermanager/corr-intg-web:${ENV_IMAGE_VER}
     container_name: corr-intg-web
     ports:
-      - 8083:8083
+      - 9084:8083
     networks:
       - corr-intg
     volumes:
