@@ -22,4 +22,17 @@ Corr Suite integration is available as windows service also. To Install the Inte
 - Extract the zip file into `c:\corrintg` folder. You should see 4 folders after extraction
 - Open command prompt as administrator and change the directory to `c:\corrintg\config`
 - Run `install.bat` and follow the instructions.
-- 
+- When prompted, enter the connection string to the database
+- Enter the port on which you want the config utility to listen
+- Enter the automator URL to which integration should be connected with
+  -- e.g: http://<eflow_automator_host>:8081
+- Enter the user name for the automator and password for the automator.
+- Utility will run to configure the database, configure the automator and create windows service.
+- Open windows services windows and look for following 2 servcies
+  -- Corr Data App Config Service
+  -- Corr Data Scanner Service
+- Start the configuration service `Corr Data App Config Service`
+- After service starts, you can access the config utility by visiting http://localhost:<port>
+  -- Port is what you have entered in the previous step.
+- Proceed with configuring the instance
+- After instance is configured, you can start the service `Corr Data Scanner Service`
