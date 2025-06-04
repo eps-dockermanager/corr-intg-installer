@@ -15,8 +15,8 @@ Corr Suite integration is available as windows service also. To Install the Inte
 ## Keep a MSsql Server with a blank database ready
 - Create a database in a MsSql Database called `corrintgdb`
 - Keep the connection string to this DB handy
-  -- e.g: `Server=<host or ip>\\MSSQLSERVER01,1433;Database=corrintgdb;User Id=<userid>;Password=<password>;TrustServerCertificate=True;`
-  Please note double \\ after host or ip if you are using named instance
+  - e.g: `Server=<host or ip>\\MSSQLSERVER01,1433;Database=corrintgdb;User Id=<userid>;Password=<password>;TrustServerCertificate=True;`
+  - Please note double \\ after host or ip if you are using named instance
 ## Extract the zip on the machine
 - Create a directory in the c drive say `c:\corrintg`
 - Extract the zip file into `c:\corrintg` folder. You should see 4 folders after extraction
