@@ -3,6 +3,8 @@ Corr Suite integration is available as windows service also. To Install the Inte
 
 ## Download the desired build
 - Login to Github and click on Actions
+  <img width="1511" alt="image" src="https://github.com/user-attachments/assets/3264909d-0960-4eac-804c-cd5c615f3c78" />
+
 - Look for the Build number you want to download
 - Download the build
 
