@@ -32,7 +32,7 @@ Corr Suite integration is available as windows service also. To Install the Inte
   - Corr Data App Config Service
   - Corr Data Scanner Service
 - Start the configuration service `Corr Data App Config Service`
-- After service starts, you can access the config utility by visiting http://localhost:<port>
+- After service starts, you can access the config utility by visiting `http://localhost:<port>`
   -- Port is what you have entered in the previous step.
 - Proceed with configuring the instance
 - After instance is configured, you can start the service `Corr Data Scanner Service`
