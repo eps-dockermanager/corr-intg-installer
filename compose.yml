@@ -43,7 +43,7 @@ services:
     - LIQUIBASE_COMMAND_CHANGELOG_FILE=/changelog.xml
     - LIQUIBASE_COMMAND_USERNAME=corrintgdbuser
     - LIQUIBASE_COMMAND_PASSWORD=corrintgdbpwd
-    command: liquibase update
+    command: liquibase --contexts=postgres update
     networks:
       - corr-intg
   corr-intg-api:
