@@ -49,6 +49,9 @@ services:
   corr-intg-api:
     image: ghcr.io/eps-dockermanager/corr-intg-api:${ENV_IMAGE_VER}
     container_name: corr-intg-api
+    depends_on:
+      corr-intg-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:5040/api/test/health || exit 1"]
       interval: 30s
@@ -61,11 +64,15 @@ services:
       - '5040:5040'
     volumes:
       - ./data/api:/App/data
+      - ./data/Logs:/Logs
     networks:
       - corr-intg
   corr-intg-datascanner:
     image: ghcr.io/eps-dockermanager/corr-intg-datascanner:${ENV_IMAGE_VER}
     container_name: corr-intg-datascanner
+    depends_on:
+      corr-intg-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:5041/api/test/health || exit 1"]
       interval: 30s
@@ -78,11 +85,15 @@ services:
       - '5041:5041'
     volumes:
       - ./data/datascanner:/App/data
+      - ./data/Logs:/Logs
     networks:
       - corr-intg
   corr-intg-appconfig:
     image: ghcr.io/eps-dockermanager/corr-intg-appconfig:${ENV_IMAGE_VER}
     container_name: corr-intg-appconfig
+    depends_on:
+      corr-intg-db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:5044/api/test/health || exit 1"]
       interval: 30s
@@ -93,6 +104,8 @@ services:
       HTTP_PORTS: 5044
     ports:
       - '5044:5044'
+    volumes:
+      - ./data/Logs:/Logs
     networks:
       - corr-intg
   corr-intg-prometheus:
