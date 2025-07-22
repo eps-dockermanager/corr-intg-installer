@@ -59,7 +59,7 @@ services:
       retries: 3
     restart: unless-stopped
     environment:
-      HTTP_PORTS: 5040
+      HTTP_PORTS: 5045
     ports:
       - '5045:5045'
     volumes:
